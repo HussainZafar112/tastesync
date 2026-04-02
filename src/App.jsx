@@ -7,6 +7,8 @@ import Restaurants from './pages/restaurants/Restaurants';
 import Feed from './pages/feed/Feed';
 import About from './pages/about/About';
 import Profile from './pages/profile/Profile';
+import ManagerLogin from './pages/manager/ManagerLogin';
+import ManagerDashboard from './pages/manager/ManagerDashboard';
 import './App.css';
 
 function ScrollToTop() {
@@ -29,6 +31,8 @@ function App() {
         <Route path="/feed" element={<Feed />} />
         <Route path="/about" element={<About />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/manager/login" element={<ManagerLogin />} />
+        <Route path="/manager/dashboard" element={<ManagerDashboard />} />
       </Routes>
     </Router>
   );

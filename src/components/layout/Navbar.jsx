@@ -65,6 +65,9 @@ const Navbar = () => {
             <Link to="/register" className="btn btn-orange btn-sm" id="nav-register">
               Get Started
             </Link>
+            <Link to="/manager/login" className="btn btn-dark btn-sm ms-2">
+              <i className="bi bi-shop me-1"></i> Partner
+            </Link>
           </div>
         </div>
       </div>
