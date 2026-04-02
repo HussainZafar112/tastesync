@@ -50,6 +50,11 @@ const Navbar = () => {
                 About
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to="/profile" className={`nav-link ${location.pathname === '/profile' ? 'active fw-semibold' : ''}`}>
+                Profile
+              </Link>
+            </li>
           </ul>
 
           {/* Auth Buttons */}
