@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import './Profile.css';
@@ -92,7 +93,7 @@ const Profile = () => {
                       </div>
                     </div>
                     <div>
-                      <button className="btn btn-orange px-4 rounded-pill">Edit Profile</button>
+                      <Link to="/edit-profile" className="btn btn-orange px-4 rounded-pill">Edit Profile</Link>
                     </div>
                   </div>
                 </div>

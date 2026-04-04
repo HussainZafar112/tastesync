@@ -9,6 +9,7 @@ import Feed from './pages/feed/Feed';
 import CreatePost from './pages/feed/CreatePost';
 import About from './pages/about/About';
 import Profile from './pages/profile/Profile';
+import EditProfile from './pages/profile/EditProfile';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import './App.css';
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/about" element={<About />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </Router>
