@@ -1,0 +1,9 @@
+/* Restaurant Detail — minimal custom styles */
+.menu-category-badge {
+  cursor: pointer;
+}
+.review-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 0.8rem;
+}
