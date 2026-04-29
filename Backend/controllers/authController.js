@@ -42,6 +42,7 @@ const registerUser = async (req, res) => {
       username: user.username,
       email: user.email,
       role: user.role,
+      avatar: user.avatar,
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -77,6 +78,7 @@ const loginUser = async (req, res) => {
       username: user.username,
       email: user.email,
       role: user.role,
+      avatar: user.avatar,
       token: generateToken(user._id),
     });
   } catch (error) {
