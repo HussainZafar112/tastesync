@@ -6,6 +6,10 @@ import './Feed.css';
 const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState('');
+  const [rating, setRating] = useState(0);
+  const [restaurantName, setRestaurantName] = useState('');
+  const [showRating, setShowRating] = useState(false);
+  const [showRestaurant, setShowRestaurant] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Parse user info from localStorage if available
@@ -63,8 +67,8 @@ const Feed = () => {
         },
         body: JSON.stringify({
           text: newPost,
-          rating: 0,
-          restaurantName: ''
+          rating: rating,
+          restaurantName: restaurantName
         })
       });
 
@@ -72,6 +76,10 @@ const Feed = () => {
         const savedPost = await response.json();
         setPosts([savedPost, ...posts]);
         setNewPost('');
+        setRating(0);
+        setRestaurantName('');
+        setShowRating(false);
+        setShowRestaurant(false);
       }
     } catch (error) {
       console.error('Error creating post:', error);
@@ -116,12 +124,23 @@ const Feed = () => {
                           ></textarea>
                           <div className="d-flex justify-content-between align-items-center mt-2">
                             <div className="d-flex gap-2">
-                              <button type="button" className="btn btn-sm btn-light"><i className="bi bi-image text-success"></i></button>
-                              <button type="button" className="btn btn-sm btn-light"><i className="bi bi-geo-alt text-primary"></i></button>
-                              <button type="button" className="btn btn-sm btn-light"><i className="bi bi-star text-warning"></i></button>
+                              <button type="button" className={`btn btn-sm ${showRestaurant ? 'btn-primary text-white' : 'btn-light'}`} onClick={() => setShowRestaurant(!showRestaurant)}><i className={`bi bi-geo-alt ${showRestaurant ? '' : 'text-primary'}`}></i></button>
+                              <button type="button" className={`btn btn-sm ${showRating ? 'btn-warning text-white' : 'btn-light'}`} onClick={() => setShowRating(!showRating)}><i className={`bi bi-star ${showRating ? '' : 'text-warning'}`}></i></button>
                             </div>
                             <button type="submit" className="btn btn-sm btn-orange" disabled={!newPost.trim()}>Post</button>
                           </div>
+                          {showRestaurant && (
+                            <div className="mt-2">
+                              <input type="text" className="form-control form-control-sm border-0" placeholder="Restaurant name (optional)" value={restaurantName} onChange={(e) => setRestaurantName(e.target.value)} />
+                            </div>
+                          )}
+                          {showRating && (
+                            <div className="mt-2">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <i key={star} className={`bi bi-star${star <= rating ? '-fill' : ''} fs-5 me-1`} style={{ color: star <= rating ? '#f59f00' : '#ddd', cursor: 'pointer' }} onClick={() => setRating(star)}></i>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </form>
