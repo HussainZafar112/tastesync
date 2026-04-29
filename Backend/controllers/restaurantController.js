@@ -87,9 +87,49 @@ const createRestaurant = async (req, res) => {
   }
 };
 
+// @desc    Get restaurants owned by logged-in user
+// @route   GET /api/restaurants/my
+// @access  Private (Owner)
+const getMyRestaurants = async (req, res) => {
+  try {
+    const restaurants = await Restaurant.find({ owner: req.user._id }).sort({ createdAt: -1 });
+    res.json(restaurants);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// @desc    Delete a restaurant
+// @route   DELETE /api/restaurants/:id
+// @access  Private (Owner)
+const deleteRestaurant = async (req, res) => {
+  try {
+    const restaurant = await Restaurant.findById(req.params.id);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+
+    // Only allow the owner or admin to delete
+    if (restaurant.owner.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Not authorized to delete this restaurant' });
+    }
+
+    await Restaurant.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Restaurant deleted successfully' });
+  } catch (error) {
+    if (error.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 module.exports = {
   getRestaurants,
   getTrendingRestaurants,
   getRestaurantById,
   createRestaurant,
+  getMyRestaurants,
+  deleteRestaurant,
 };
