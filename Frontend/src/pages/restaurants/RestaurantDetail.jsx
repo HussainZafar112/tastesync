@@ -25,11 +25,16 @@ const RestaurantDetail = () => {
         
         setRestaurant(data);
         
-        // Mock reviews since Reviews API is not built yet
-        setReviews([
-          { id: 1, user: 'Ahmed Khan', avatar: 'AK', rating: 5, date: '2 days ago', text: 'The biryani is absolutely phenomenal! Best in Lahore, hands down.' },
-          { id: 2, user: 'Sara Malik', avatar: 'SM', rating: 4, date: '1 week ago', text: 'Great food and ambiance. The mutton karahi was cooked to perfection. Service was a bit slow during peak hours.' }
-        ]);
+        // Fetch real reviews
+        try {
+          const reviewsRes = await fetch(`http://localhost:5000/api/posts?restaurantName=${encodeURIComponent(data.name)}`);
+          if (reviewsRes.ok) {
+            const reviewsData = await reviewsRes.json();
+            setReviews(reviewsData);
+          }
+        } catch (err) {
+          console.error("Failed to fetch reviews", err);
+        }
 
         if (data.menu && Object.keys(data.menu).length > 0) {
           setActiveMenu(Object.keys(data.menu)[0]);
@@ -44,20 +49,35 @@ const RestaurantDetail = () => {
     fetchRestaurant();
   }, [id]);
 
-  const handleReviewSubmit = (e) => {
+  const handleReviewSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
+    if (!token) return alert('Please login to write a review');
     if (!reviewForm.text.trim() || reviewForm.rating === 0) return;
-    const newReview = {
-      id: Date.now(),
-      user: 'You',
-      avatar: 'YO',
-      rating: reviewForm.rating,
-      date: 'Just now',
-      text: reviewForm.text,
-    };
-    setReviews([newReview, ...reviews]);
-    setReviewForm({ rating: 0, text: '' });
-    setShowReviewForm(false);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          text: reviewForm.text,
+          rating: reviewForm.rating,
+          restaurantName: restaurant.name
+        })
+      });
+
+      if (response.ok) {
+        const savedReview = await response.json();
+        setReviews([savedReview, ...reviews]);
+        setReviewForm({ rating: 0, text: '' });
+        setShowReviewForm(false);
+      }
+    } catch (error) {
+      console.error('Error creating review:', error);
+    }
   };
 
   if (loading) {
@@ -210,14 +230,16 @@ const RestaurantDetail = () => {
                   )}
 
                   {reviews.map((review) => (
-                    <div className="py-3 border-top" key={review.id}>
+                    <div className="py-3 border-top" key={review._id}>
                       <div className="d-flex align-items-center gap-2 mb-2">
                         <div className="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold review-avatar" style={{ backgroundColor: 'var(--ts-orange)' }}>
-                          {review.avatar}
+                          {review.user?.avatar || review.user?.fullName?.substring(0, 2).toUpperCase() || 'U'}
                         </div>
                         <div>
-                          <div className="fw-semibold small">{review.user}</div>
-                          <div className="text-secondary" style={{ fontSize: '0.75rem' }}>{review.date}</div>
+                          <div className="fw-semibold small">{review.user?.fullName || 'Unknown User'}</div>
+                          <div className="text-secondary" style={{ fontSize: '0.75rem' }}>
+                            {new Date(review.createdAt).toLocaleDateString()}
+                          </div>
                         </div>
                         <div className="ms-auto">
                           {[...Array(5)].map((_, i) => (

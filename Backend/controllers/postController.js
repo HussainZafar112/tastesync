@@ -3,7 +3,11 @@ const Post = require('../models/Post');
 // Get all posts for the feed
 const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find()
+    const filter = {};
+    if (req.query.restaurantName) {
+      filter.restaurantName = req.query.restaurantName;
+    }
+    const posts = await Post.find(filter)
       .populate('user', 'fullName avatar username')
       .sort({ createdAt: -1 }); // Newest first
     res.json(posts);
