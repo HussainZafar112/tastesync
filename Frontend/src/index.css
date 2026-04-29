@@ -1,0 +1,88 @@
+/* ========================
+   TasteSync — Global Styles
+   Simple, clean design using Bootstrap + custom overrides
+   ======================== */
+
+:root {
+  --ts-orange: #e8590c;
+  --ts-orange-light: #ff7b2e;
+  --ts-gold: #f59f00;
+  --ts-dark: #1a1a2e;
+  --ts-darker: #0f0f1a;
+  --ts-gray: #6c757d;
+  --ts-light-gray: #f8f9fa;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* Accent text color */
+.text-orange {
+  color: var(--ts-orange) !important;
+}
+
+/* Custom button styles */
+.btn-orange {
+  background-color: var(--ts-orange);
+  border-color: var(--ts-orange);
+  color: #fff;
+}
+.btn-orange:hover {
+  background-color: var(--ts-orange-light);
+  border-color: var(--ts-orange-light);
+  color: #fff;
+}
+
+.btn-outline-orange {
+  border-color: var(--ts-orange);
+  color: var(--ts-orange);
+}
+.btn-outline-orange:hover {
+  background-color: var(--ts-orange);
+  color: #fff;
+}
+
+/* Simple card hover lift */
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+.card-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Star color */
+.text-warning-stars {
+  color: var(--ts-gold);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
