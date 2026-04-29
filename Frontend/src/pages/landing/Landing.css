@@ -1,0 +1,27 @@
+/* Landing Page Custom Styles */
+
+.hero-section {
+  background: linear-gradient(135deg, #fff5f0 0%, #ffffff 50%, #fff9f0 100%);
+}
+
+.hero-image {
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.min-vh-75 {
+  min-height: 75vh;
+}
+
+.step-number {
+  font-size: 2rem;
+  opacity: 0.3;
+}
+
+.bg-orange-light {
+  background-color: #fff0e6 !important;
+}
+
+.text-purple {
+  color: #7c3aed !important;
+}
