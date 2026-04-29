@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import './Feed.css';
@@ -11,8 +11,7 @@ const Feed = () => {
   const [showRating, setShowRating] = useState(false);
   const [showRestaurant, setShowRestaurant] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const inputRef = useRef(null);
+  const [availableRestaurants, setAvailableRestaurants] = useState([]);
 
   // Parse user info from localStorage if available
   const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -20,22 +19,20 @@ const Feed = () => {
 
   useEffect(() => {
     fetchPosts();
+    fetchRestaurants();
   }, []);
 
-  useEffect(() => {
-    if (showRestaurant && window.google && inputRef.current) {
-      const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
-        types: ['establishment'],
-      });
-      
-      autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace();
-        if (place && place.name) {
-          setRestaurantName(place.name);
-        }
-      });
+  const fetchRestaurants = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/restaurants');
+      if (response.ok) {
+        const data = await response.json();
+        setAvailableRestaurants(data);
+      }
+    } catch (error) {
+      console.error('Error fetching restaurants:', error);
     }
-  }, [showRestaurant]);
+  };
 
   const fetchPosts = async () => {
     try {
@@ -148,14 +145,16 @@ const Feed = () => {
                           </div>
                           {showRestaurant && (
                             <div className="mt-2">
-                              <input 
-                                ref={inputRef}
-                                type="text" 
-                                className="form-control form-control-sm border-0" 
-                                placeholder="Search restaurant on Google..." 
+                              <select 
+                                className="form-select form-select-sm border-0 bg-light" 
                                 value={restaurantName} 
-                                onChange={(e) => setRestaurantName(e.target.value)} 
-                              />
+                                onChange={(e) => setRestaurantName(e.target.value)}
+                              >
+                                <option value="">Select a restaurant...</option>
+                                {availableRestaurants.map(r => (
+                                  <option key={r._id} value={r.name}>{r.name}</option>
+                                ))}
+                              </select>
                             </div>
                           )}
                           {showRating && (
