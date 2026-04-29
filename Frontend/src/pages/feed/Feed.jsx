@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import './Feed.css';
@@ -12,6 +12,8 @@ const Feed = () => {
   const [showRestaurant, setShowRestaurant] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const inputRef = useRef(null);
+
   // Parse user info from localStorage if available
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const token = localStorage.getItem('token');
@@ -19,6 +21,21 @@ const Feed = () => {
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    if (showRestaurant && window.google && inputRef.current) {
+      const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
+        types: ['establishment'],
+      });
+      
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (place && place.name) {
+          setRestaurantName(place.name);
+        }
+      });
+    }
+  }, [showRestaurant]);
 
   const fetchPosts = async () => {
     try {
@@ -131,7 +148,14 @@ const Feed = () => {
                           </div>
                           {showRestaurant && (
                             <div className="mt-2">
-                              <input type="text" className="form-control form-control-sm border-0" placeholder="Restaurant name (optional)" value={restaurantName} onChange={(e) => setRestaurantName(e.target.value)} />
+                              <input 
+                                ref={inputRef}
+                                type="text" 
+                                className="form-control form-control-sm border-0" 
+                                placeholder="Search restaurant on Google..." 
+                                value={restaurantName} 
+                                onChange={(e) => setRestaurantName(e.target.value)} 
+                              />
                             </div>
                           )}
                           {showRating && (
